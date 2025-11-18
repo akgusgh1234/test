@@ -32,7 +32,7 @@ function MainTab() {
           elevation: 0,
           shadowOpacity: 0,
           borderWidth: 0,
-          height: 100,               // 높이 살짝 여유 있게
+          height: 50,               // 높이 살짝 여유 있게
           position: 'absolute',     // absolute로 해야 둥근 모서리 뒤 배경이 보임 (선택사항)
           bottom: 0,
         }
