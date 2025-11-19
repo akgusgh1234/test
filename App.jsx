@@ -10,7 +10,12 @@ import HomeScreen from './HomeScreen';
 import Calculator from './Calculator';
 import DetailScreen from './DetailScreen';
 import RandomStack from './randomstack';
-import { MoneyProvider } from './Money';
+import { MoneyProvider } from './data/Money';
+import ItemsListScreen from './screen/ItemsListScreen';
+import ItemDetailScreen from './screen/ItemDetailScreen';
+import ItemCreateScreen from './screen/ItemCreateScreen';
+import ItemEditScreen from './screen/ItemEditScreen';
+import { ItemsProvider } from './data/ItemsContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator(); // [추가] 스택 생성
@@ -32,7 +37,7 @@ function MainTab() {
           elevation: 0,
           shadowOpacity: 0,
           borderWidth: 0,
-          height: 50,               // 높이 살짝 여유 있게
+          height: 80,               // 높이 살짝 여유 있게
           position: 'absolute',     // absolute로 해야 둥근 모서리 뒤 배경이 보임 (선택사항)
           bottom: 0,
         }
@@ -67,7 +72,7 @@ function MainTab() {
       {/* 3. 쇼핑 */}
       <Tab.Screen 
         name="Shopping"
-        component={Calculator} 
+        component={ItemsListScreen} 
         options={{ 
           title: '쇼핑',
           tabBarIcon: ({ color, size }) => (
@@ -107,8 +112,9 @@ function MainTab() {
 export default function App() {
   return (
 	<MoneyProvider>
-    <NavigationContainer>
-      <Stack.Navigator>
+    <ItemsProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
         {/* 1. 메인 탭 화면 (기본 화면) */}
         <Stack.Screen 
           name="MainTab" 
@@ -122,10 +128,28 @@ export default function App() {
           component={DetailScreen}
           options={{ title: '상세 정보' }} // 필요시 헤더 제목 설정
         />
+        <Stack.Screen 
+            name="ItemDetail" 
+            component={ItemDetailScreen} 
+            options={{ title: '상품 상세' }}
+          />
+
+          <Stack.Screen 
+            name="Create" 
+            component={ItemCreateScreen} 
+            options={{ title: '상품 등록' }}
+          />
+
+          <Stack.Screen 
+            name="Edit" 
+            component={ItemEditScreen} 
+            options={{ title: '상품 수정' }}
+          />
 
 		
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ItemsProvider>
 	</MoneyProvider>
   );
 }

@@ -1,7 +1,7 @@
 // screens/DetailScreen.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, Button, TextInput, StyleSheet ,Alert} from 'react-native';
-import { MoneyContext } from './Money';
+import { MoneyContext } from './data/Money';
 
 export default function DetailScreen({ route, navigation }) {
     const item = route?.params?.item; // 여기서 item.id를 가져옵니다.

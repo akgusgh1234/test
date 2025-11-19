@@ -2,7 +2,7 @@
 import React, { useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { MoneyContext } from './Money';
+import { MoneyContext } from './data/Money';
 
 const DATA = [
     { id: '1', title: '토스뱅크' , image: require('./assets/toss.jpg')},
