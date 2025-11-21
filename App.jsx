@@ -10,15 +10,16 @@ import HomeScreen from './HomeScreen';
 import Calculator from './Calculator';
 import DetailScreen from './DetailScreen';
 import RandomStack from './randomstack';
-import { MoneyProvider } from './data/Money';
+import { AlramProvider } from './data/Alram';
 import ItemsListScreen from './screen/ItemsListScreen';
 import ItemDetailScreen from './screen/ItemDetailScreen';
 import ItemCreateScreen from './screen/ItemCreateScreen';
 import ItemEditScreen from './screen/ItemEditScreen';
 import { ItemsProvider } from './data/ItemsContext';
+import BookmarkScreen from './screen/BookmarkScreen';
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator(); // [추가] 스택 생성
+const Stack = createNativeStackNavigator(); 
 
 // 기존 App 함수에 있던 탭 설정을 별도 컴포넌트로 분리
 function MainTab() {
@@ -26,7 +27,7 @@ function MainTab() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#2f5fd3',
+        tabBarActiveTintColor: 'rgb(219, 31, 38)',
         tabBarInactiveTintColor: 'gray',
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
@@ -43,7 +44,6 @@ function MainTab() {
         }
       }}
     >
-      {/* 계산기 (숨김 처리된 탭) */}
 
       {/* 1. 홈 */}
       <Tab.Screen 
@@ -57,26 +57,24 @@ function MainTab() {
         }} 
       />
 
-      {/* 2. 혜택 */}
+      {/* 2. 북마크 */}
       <Tab.Screen 
-        name="Benefit"
-        component={Calculator} 
+        name="Bookmark"
+        component={BookmarkScreen} 
         options={{ 
-          title: '혜택',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="gift" size={size} color={color} />
-          ),
+          title: '북마크',
+          tabBarIcon: ({ color, size }) => ( <Ionicons name="star" size={size} color={color} /> ),
         }} 
       />
 
-      {/* 3. 쇼핑 */}
+      {/* 3. 필터 */}
       <Tab.Screen 
         name="Shopping"
         component={ItemsListScreen} 
         options={{ 
-          title: '쇼핑',
+          title: '필터',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart" size={size} color={color} />
+            <Ionicons name="filter-outline" size={size} color={color} />
           ),
         }} 
       />
@@ -93,14 +91,14 @@ function MainTab() {
         }} 
       />
 
-      {/* 5. 전체 */}
+      {/* 5. 설정 */}
       <Tab.Screen 
         name="All"
         component={Calculator} 
         options={{ 
-          title: '전체',
+          title: '설정',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="menu" size={size} color={color} />
+            <Ionicons name="settings" size={size} color={color} />
           ),
         }} 
       />
@@ -111,7 +109,7 @@ function MainTab() {
 // 실제 App 컴포넌트
 export default function App() {
   return (
-	<MoneyProvider>
+	<AlramProvider>
     <ItemsProvider>
       <NavigationContainer>
         <Stack.Navigator>
@@ -150,6 +148,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </ItemsProvider>
-	</MoneyProvider>
+	</AlramProvider>
   );
 }

@@ -1,73 +1,104 @@
 // screens/DetailScreen.jsx
-import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, Button, TextInput, StyleSheet ,Alert} from 'react-native';
-import { MoneyContext } from './data/Money';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { AlramContext } from './data/Alram';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function DetailScreen({ route, navigation }) {
-    const item = route?.params?.item; // 여기서 item.id를 가져옵니다.
-    
-    const context = useContext(MoneyContext);
-    const balances = context?.balances || {};      // 없으면 빈 객체
-    const updateBalance = context?.updateBalance;
-
-	const [inputText, setInputText] = useState('');
-    // 화면이 열릴 때, 기존에 저장된 금액이 있으면 불러오기
+    const item = route?.params?.item;
+    const context = useContext(AlramContext);
+    const { markAsRead, toggleBookmark, bookmarkStatus } = context || {};
+    const isBookmarked = bookmarkStatus?.[item?.id];
     useEffect(() => {
-        // balances가 있고, 해당 ID의 값이 있을 때만 실행
-        if (balances && balances[item.id]) {
-            setInputText(balances[item.id]);
+        if (markAsRead && item) {
+            markAsRead(item.id, true); 
         }
-    }, [item.id, balances]);
+    }, [item, markAsRead]);
 
-    const handleSave = () => {
-        // updateBalance 함수가 존재하는지 확인 후 실행
-        if (!inputText.trim()) {
-            Alert.alert('알림', '금액을 입력해주세요.');
-            return; // 함수 종료 (저장 안 함)
-        }
-
-        // 2. 정수(숫자)인지 확인하는 정규식 (0~9가 아닌 문자가 섞여있으면 false)
-        const isInteger = /^-?\d+$/.test(inputText);
-
-        if (!isInteger) {
-            Alert.alert('경고', '숫자(정수)만 입력해주세요.\n(소수점, 문자 불가)');
-            return; // 함수 종료
-        }
-
-        // 3. 통과하면 저장 진행
-        if (updateBalance) {
-            updateBalance(item.id, inputText); 
-            navigation.goBack(); 
+    const handleMarkUnread = () => {
+        if (markAsRead) {
+            markAsRead(item.id, false); 
+            navigation.goBack();
         }
     };
 
     return (
         <View style={styles.wrapper}>
             <Text style={styles.headerTitle}>
-                {`통장: ${item?.title}`}
+                {item?.title}
             </Text>
 
             <View style={styles.container}>
-                <Text style={styles.title}>현재 잔액을 입력하세요</Text>
-                
-                <TextInput 
-                    style={styles.input}
-                    placeholder="입력하세요"
-                    keyboardType="numeric"
-                    value={inputText}
-                    onChangeText={setInputText}
-                />
+                {/* 내용 표시 영역 */}
+                <View style={styles.contentBox}>
+                    <Text style={styles.contentText}>
+                        백앤드가 추가 해주겠지
+                    </Text>
+                </View>
 
-                <Button title="저장하기" onPress={handleSave} />
+                <TouchableOpacity 
+                    style={[styles.bookmarkBtn, isBookmarked && styles.bookmarkBtnActive]}
+                    onPress={() => toggleBookmark && toggleBookmark(item.id)}
+                >
+                    <Ionicons 
+                        name={isBookmarked ? "star" : "star-outline"} 
+                        size={24} 
+                        color={isBookmarked ? "#fff" : "#333"} 
+                    />
+                    <Text style={[styles.btnText, isBookmarked && { color: '#fff' }]}>
+                        {isBookmarked ? "북마크 해제" : "북마크에 추가"}
+                    </Text>
+                </TouchableOpacity>
+
+                <View style={{ marginTop: 20 }}>
+                     <Text style={{ color: 'green', marginBottom: 20, fontWeight: 'bold' }}>
+                        ✔ 읽음 처리되었습니다.
+                    </Text>
+                </View>
+
+                <Button title="다시 '안 읽음'으로 표시" onPress={handleMarkUnread} color="#888" />
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    wrapper: { flex: 1, paddingTop: 60, alignItems: 'center', gap: 12, backgroundColor: 'white' },
-    headerTitle: { fontSize: 22, fontWeight: '600', marginBottom: 20 },
-    container: { width: '100%', alignItems: 'center', paddingHorizontal: 20 },
-    title: { fontSize: 18, marginBottom: 10 },
-    input: { width: '80%', borderBottomWidth: 1, borderBottomColor: '#ccc', padding: 10, fontSize: 18, marginBottom: 30, textAlign: 'center' }
+    wrapper: { flex: 1, paddingTop: 80, alignItems: 'center', backgroundColor: 'white' },
+    headerTitle: { fontSize: 24, fontWeight: 'bold', marginBottom: 30, color: '#333' },
+    container: { width: '100%', alignItems: 'center', paddingHorizontal: 30 },
+    
+    contentBox: {
+        width: '100%',
+        padding: 20,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 10,
+        marginBottom: 20,
+    },
+    contentText: {
+        fontSize: 16,
+        color: '#555',
+        lineHeight: 24,
+        textAlign: 'center',
+    },
+    bookmarkBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        backgroundColor: '#fff',
+        gap: 8,
+        marginBottom: 10,
+    },
+    bookmarkBtnActive: {
+        backgroundColor: '#FFD700', 
+        borderColor: '#FFD700',
+    },
+    btnText: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+    }
 });

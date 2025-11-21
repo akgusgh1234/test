@@ -17,7 +17,7 @@ export default function ButtonPrimary({ title, onPress, style }) {
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: '#2f5fd3', // 파란색 배경
+    backgroundColor: 'rgb(219, 31, 38)', 
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 8,
