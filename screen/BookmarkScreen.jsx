@@ -6,9 +6,13 @@ import { AlramContext } from '../data/Alram';
 import { ALRAM_DATA } from '../data/mockAlrams'; // 1단계에서 만든 데이터 가져오기
 
 export default function BookmarkScreen({ navigation }) {
-    const { bookmarkStatus } = useContext(AlramContext) || {};
-    
-    const bookmarkedItems = ALRAM_DATA.filter(item => bookmarkStatus[item.id]);
+    const context = useContext(AlramContext);
+    const { bookmarkStatus } = context || { bookmarkStatus: {} };
+    const safeStatus = bookmarkStatus || {};
+    const safeData = ALRAM_DATA || [];
+    const bookmarkedItems = Array.isArray(safeData) 
+        ? safeData.filter(item => item && safeStatus[item.id]) 
+        : [];
 
     return (
         <View style={styles.container}>

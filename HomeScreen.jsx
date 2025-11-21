@@ -35,6 +35,7 @@ export default function HomeScreen({ navigation }) {
                     showsVerticalScrollIndicator={true}
                     contentContainerStyle={{ paddingBottom: 20 }}
                     renderItem={({ item }) => {
+                        if (!item) return null;
                         const isRead = safeStatus[item.id] === true;
 
                         return (

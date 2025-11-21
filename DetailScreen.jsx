@@ -5,12 +5,14 @@ import { AlramContext } from './data/Alram';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function DetailScreen({ route, navigation }) {
-    const item = route?.params?.item;
+    const params = route.params || {};
+    const item = params.item; 
     const context = useContext(AlramContext);
     const { markAsRead, toggleBookmark, bookmarkStatus } = context || {};
-    const isBookmarked = bookmarkStatus?.[item?.id];
+    const isBookmarked = (item && bookmarkStatus) ? bookmarkStatus[item.id] : false;
+
     useEffect(() => {
-        if (markAsRead && item) {
+        if (item && item.id && markAsRead) {
             markAsRead(item.id, true); 
         }
     }, [item, markAsRead]);
@@ -22,10 +24,19 @@ export default function DetailScreen({ route, navigation }) {
         }
     };
 
+    if (!item) {
+        return (
+            <View style={[styles.wrapper, { justifyContent: 'center' }]}>
+                <Text>데이터를 불러올 수 없습니다.</Text>
+                <Button title="뒤로 가기" onPress={() => navigation.goBack()} />
+            </View>
+        );
+    }
+    
     return (
         <View style={styles.wrapper}>
             <Text style={styles.headerTitle}>
-                {item?.title}
+                {item.title || '제목 없음'}
             </Text>
 
             <View style={styles.container}>
