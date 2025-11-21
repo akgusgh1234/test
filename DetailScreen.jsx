@@ -1,21 +1,21 @@
 // screens/DetailScreen.jsx
 import React, { useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button,TouchableOpacity } from 'react-native';
 import { AlramContext } from './data/Alram';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function DetailScreen({ route, navigation }) {
     const params = route.params || {};
-    const item = params.item; 
+    const item = params.item || null; 
     const context = useContext(AlramContext);
     const { markAsRead, toggleBookmark, bookmarkStatus } = context || {};
-    const isBookmarked = (item && bookmarkStatus) ? bookmarkStatus[item.id] : false;
+    const itemId = item ? item.id : null;
+    const isBookmarked = (bookmarkStatus && itemId) ? bookmarkStatus[itemId] : false;
 
     useEffect(() => {
-        if (item && item.id && markAsRead) {
-            markAsRead(item.id, true); 
-        }
-    }, [item, markAsRead]);
+    if (!item || !itemId || !markAsRead) return;
+    markAsRead(itemId, true);
+}, [item, itemId, markAsRead]);
 
     const handleMarkUnread = () => {
         if (markAsRead) {
@@ -25,13 +25,14 @@ export default function DetailScreen({ route, navigation }) {
     };
 
     if (!item) {
-        return (
-            <View style={[styles.wrapper, { justifyContent: 'center' }]}>
-                <Text>데이터를 불러올 수 없습니다.</Text>
-                <Button title="뒤로 가기" onPress={() => navigation.goBack()} />
-            </View>
-        );
-    }
+    return (
+        <View style={[styles.wrapper, { justifyContent: 'center' }]}>
+            <Text style={{ color: '#999', marginBottom: 10 }}>
+                데이터를 불러오는 중입니다...
+            </Text>
+        </View>
+    );
+}
     
     return (
         <View style={styles.wrapper}>
